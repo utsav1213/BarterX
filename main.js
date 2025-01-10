@@ -1,5 +1,7 @@
 import { serve } from 'bun';
+import { readFileSync } from "fs";
 
+const about_html = readFileSync("./about.html", "utf-8");
 const products = [
   { id: 1, name: "Used Laptop", price: 300 },
   { id: 2, name: "Second-hand Bicycle", price: 50 },
@@ -12,9 +14,9 @@ Bun.serve({
 
   
     const logData = `[${new Date().toISOString()}] ${req.method} ${url.pathname}\n`;
-    Bun.write("/log.txt", logData, { append: true });
 
- 
+
+    Bun.write("./log.txt", logData, { append: true });
     if (url.pathname === "/") {
       return new Response("Welcome to the BarterX");
     }
@@ -68,23 +70,7 @@ Bun.serve({
     }
 
     if (url.pathname === "/about") {
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>About BarterX</title>
-            <link rel="stylesheet" href="/styles.css">
-        </head>
-        <body>
-            <h1>About BarterX</h1>
-            <p>The modern approach to trading our commodities.</p>
-            <img src="/logo.png" alt="BarterX Logo">
-        </body>
-        </html>
-      `;
-      return new Response(htmlContent, {
-        headers: { "Content-Type": "text/html" },
-      });
+      return new Response(about_html,{status: 200,headers: {"Content-Type": "text/html",},})
     }
 
     if (url.pathname === "/api/products") {
